@@ -1,3 +1,6 @@
+"""
+Utility functions
+"""
 import numpy as np
 import torch
 
@@ -9,6 +12,7 @@ gpu_available = torch.cuda.is_available()
 
 
 def get_problem_type(split):
+    '''Determine type of the task (classification vs regression) and number of classes'''
     classification = False
     num_classes = None
     y = split['test']['Y'] 
@@ -18,25 +22,19 @@ def get_problem_type(split):
     return classification, num_classes 
 
 def dict_to_str(performance):
+    '''Convert performance dictionary to string for output'''
     performance_str = ',  '.join([f'{key}: {performance[key]:.4f}' for key in performance])
     return  performance_str
 
 
-###############################################################################
-# calculate various metrics of regression prediction
-
-
-
-
-
 def spearman_metric(y_true, y_pred):
-    """spearman metric
-    """
+    '''spearman metric'''
+    
     return spearmanr(y_true, y_pred)[0]
 
 
 def regression_metrics(target, reg_prediction):
-    
+    '''Calculate various metrics of regression prediction'''
     
     assert len(target) == len(reg_prediction),\
         'target and reg_prediction  must have the same length'  
@@ -56,13 +54,16 @@ def regression_metrics(target, reg_prediction):
     # MAE
     reg_metrics['MAE'] = mean_absolute_error(target, reg_prediction)
     
+    # Spearman
+    reg_metrics['Spearman'] = spearman_metric(target, reg_prediction)
+    
     
     return reg_metrics
     
-###############################################################################
-# calculate various metrics of classification prediction
+
 
 def classification_metrics(target, prediction_prob, suppress_warnings=False, class_labels=None):
+    '''Calculate various metrics of classification prediction'''
     
     assert len(target) == len(prediction_prob),\
         'target and prediction_prob must have the same length'  

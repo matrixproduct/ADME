@@ -1,3 +1,11 @@
+"""
+Transformer model build using Simple TRansformers. 
+Pre-trained models can be choosen from a large set of models 
+from the Hugging Face Transformers Library.
+https://simpletransformers.ai/
+https://github.com/huggingface/transformers
+
+"""
 from simpletransformers.classification import ClassificationModel, ClassificationArgs
 import logging
 import torch
@@ -8,13 +16,15 @@ import utils
 
 
 logging.basicConfig(level=logging.INFO)
-transformers_logger = logging.getLogger("transformers")
+transformers_logger = logging.getLogger('transformers')
 transformers_logger.setLevel(logging.WARNING)
 
 
 def transformer_predict(split, model_type='roberta', 
                         model_name='seyonec/ChemBERTa-zinc-base-v1', 
                         **kwargs):
+    '''Train and test the transformer model'''
+    
     classification, num_classes =  utils.get_problem_type(split)
 
     if not num_classes:

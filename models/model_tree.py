@@ -1,3 +1,11 @@
+"""
+We used the approach developed in 
+'Accurate ADMET Prediction with XGBoost' by Hao Tian, Rajas Ketkar, Peng Tao
+https://arxiv.org/abs/2204.07532v2
+
+https://github.com/smu-tao-group/ADMET_XGBoost
+"""
+
 import numpy as np
 import xgboost
 import utils
@@ -8,7 +16,11 @@ from config import best_params as saved_best_params
 tree_method = 'gpu_hist' if utils.gpu_available else 'hist'
 
 def tree_benchmark_predict(benchmark, **kwargs):
-    
+    '''
+    Train and test the tree model on one of the ADME datasets.
+    Load pre-calculated features from files.  
+    '''
+               
     classification, num_classes =  utils.get_problem_type(benchmark)
     name = kwargs.get('set_name').lower()   
     best_params = saved_best_params[name]

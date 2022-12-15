@@ -1,3 +1,8 @@
+"""
+Graph Convolutional Network model build using PyTorch Geometric.
+https://pytorch-geometric.readthedocs.io/en/latest/
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -36,19 +41,6 @@ from torchmetrics import Accuracy
 import utils
 from utils import dict_to_str
 
-
-
-
-
-
-# for step, data in enumerate(loader['test']):
-#     print(f'Step {step + 1}:')
-#     print('=======')
-#     print(f'Number of graphs in the current batch: {data.num_graphs}')
-#     print(data)
-#     print()
-
-#%% Models
 
 
 # Graph Convolutional Network
@@ -106,12 +98,13 @@ class GCN(nn.Module):
 #%% Train and test
 
 
-LossFn = Callable[[Tensor, Tensor], Tensor]
-Stage = Literal['train', 'valid', 'test']
+# Stage = Literal['train', 'valid', 'test']
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def train_step(model, data_loader, optimizer, loss_fn):
+    '''Train step'''
+    
     model.train()
     train_loader = data_loader['train']
     loss_metric = {}
@@ -131,7 +124,9 @@ def train_step(model, data_loader, optimizer, loss_fn):
 
 
 @torch.no_grad()
-def eval_step(model: nn.Module, data_loader, loss_fn: LossFn, stage: Stage) -> Tuple[float, float]:
+def eval_step(model, data_loader, loss_fn, stage):
+    '''Evaluation step'''
+    
     model.eval()
     loader = data_loader[stage]
     loss_metric = {}
@@ -145,16 +140,13 @@ def eval_step(model: nn.Module, data_loader, loss_fn: LossFn, stage: Stage) -> T
 
 
 
-def train(
-    model: nn.Module,
-    data: Data,
-    optimizer: torch.optim.Optimizer,
-    loss_fn: LossFn = None,
-    max_epochs: int = 200,
-    early_stopping: int = 10,
-    print_interval: int = 20,
-    verbose: bool = True,
-) -> dict:
+def train(model, data, optimizer,
+    loss_fn=None,
+    max_epochs=200,
+    early_stopping=10,
+    print_interval=20,
+    verbose=True):
+    ''' Train and test'''
     
     if not loss_fn:
         if model.classification:
@@ -181,11 +173,7 @@ def train(
             print(f'\nEpoch: {epoch}\n----------')
             print(f'{dict_to_str(loss_metric)}')
             print(f'{dict_to_str(valid_loss_metric)}')
-            # print(f'Train loss: {loss:.4f}')
-            # print(f'Valid loss: {valid_loss:.4f}')
-
-            # print(f'Train loss: {loss:.4f} | Train acc: {acc:.4f}')
-            # print(f'  Valid loss: {val_loss:.4f} |   Valid acc: {val_acc:.4f}')
+           
 
     test_loss_metric = eval_step(model, data, loss_fn, 'test')
     if verbose:
@@ -200,8 +188,9 @@ def train(
 
 
 def gcn_predict(split, **kwargs):
-    classification, num_classes =  utils.get_problem_type(split)
-        
+    ''' GCN model preditions'''
+    
+    classification, num_classes =  utils.get_problem_type(split)    
     loader = {}
     
     for key, df in split.items():
