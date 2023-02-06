@@ -32,9 +32,6 @@ Three different types of models are employed for this project: Graph Convolution
 The aim for this project was to demonstrate that I can build a workable ML pipeline rather than achieving high performance results. 
 I chose three different approaches on purpose: building a model from scratch, training large pre-trained models and finally integrating a solution, which was designed for these specific datasets.     
 
-I worked on the project during 5 days for several hours per day. I was familiar with all three types of models, but with different degrees of familiarity: tree like models have been used 
-a lot in my current job, I have learnt recently about Graph Neural Networks and used the GCN model in one project, I knew about transformers for a long time, but I have never used them in my projects before.
-The most time I spent investigating and choosing appropriate packages/models in the case of transformers and tree-like models and integrating them in my pipeline.
 
 If I had more time I could make the following improvements:
 1. GCN model: optimising architecture; hyperparameter tuning.
